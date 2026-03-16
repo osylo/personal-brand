@@ -3,266 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ciudadanía USA - ALL STEAMER Edition</title>
+    <title>Juanita - Camino a la Ciudadanía</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #1a2a6c; /* Azul oscuro para texto y botones secundarios */
-            --accent: #FFD700;   /* Amarillo Banana intenso */
-            --accent-hover: #FFC800; /* Amarillo Banana un poco más oscuro */
+            --primary: #1a2a6c;
+            --banana: #FFD700;
+            --banana-soft: #FFFEF0;
             --success: #27ae60;
-            --bg: #fdfdfd;      /* Fondo casi blanco */
-            --text-main: #333;
+            --error: #e74c3c;
+            --bg: #fdfdfd;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg);
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             margin: 0;
-            color: var(--text-main);
+            color: #333;
         }
         .container {
-            max-width: 600px;
+            max-width: 550px;
             width: 100%;
             background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 20px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
             text-align: center;
-            border-top: 5px solid var(--accent); /* Detalle superior amarillo */
+            border: 4px solid var(--banana);
         }
-        h1 {
-            color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        p { color: #666; margin-bottom: 25px; }
-
-        /* Barra de progreso en Amarillo Banana */
-        .progress-bar {
-            height: 10px;
-            background: #eee;
-            border-radius: 5px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        #progress-fill {
-            height: 100%;
-            background: var(--accent); /* Llenado amarillo */
-            width: 0%;
-            transition: 0.3s;
-        }
-
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .welcome-text { color: #666; margin-bottom: 20px; font-weight: bold; }
+        
+        /* Tarjeta de Estudio */
         .card {
-            min-height: 220px;
+            min-height: 250px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #eee;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            border: 2px solid #f1f1f1;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            background: #fff;
+            position: relative;
         }
-        .q-en { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
-        .q-es { font-size: 1.1rem; color: #555; font-style: italic; border-top: 1px solid #eee; padding-top: 15px; }
+        .q-en { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .q-es { font-size: 1rem; color: #777; font-style: italic; margin-bottom: 15px; }
         
-        /* Caja de respuesta resaltada con fondo amarillo muy suave */
-        .ans-box {
-            background: #FFFEF0; /* Fondo amarillo crema muy pálido */
-            color: var(--primary);
-            padding: 18px;
+        /* Dictado y Resultado */
+        .dictation-box {
+            background: #f9f9f9;
+            border: 2px dashed var(--banana);
+            padding: 10px;
             border-radius: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            min-height: 40px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .feedback { font-weight: 800; margin: 10px 0; display: none; padding: 10px; border-radius: 8px; }
+        .ans-box {
+            background: var(--banana-soft);
+            color: var(--primary);
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
             display: none;
-            margin-top: 20px;
-            border: 1px solid var(--accent);
+            border: 2px solid var(--banana);
         }
 
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        
+        /* Botones */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button {
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: 0.2s;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
-        /* Botones principales en Amarillo Banana */
-        .btn-check, .btn-main {
-            background-color: var(--accent);
-            color: var(--primary); /* Texto oscuro para contraste */
-            grid-column: span 2;
-        }
-        .btn-check:hover, .btn-main:hover { background-color: var(--accent-hover); }
+        .btn-audio { background: var(--primary); color: white; grid-column: span 2; }
+        .btn-mic { background: #ff4757; color: white; grid-column: span 2; font-size: 1.1rem; }
+        .btn-mic.listening { animation: pulse 1.5s infinite; background: #ff1f33; }
+        .btn-check { background: var(--banana); color: var(--primary); grid-column: span 2; }
+        .btn-nav { background: #eee; color: var(--primary); }
 
-        /* Botón de Audio en azul oscuro */
-        .btn-audio {
-            background-color: var(--primary);
-            color: white;
-            grid-column: span 2;
-            margin-bottom: 5px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 71, 87, 0.5); }
+            100% { transform: scale(1); }
         }
 
-        /* Botones de navegación en azul oscuro */
-        .btn-nav {
-            background-color: #f1f1f1;
-            color: var(--primary);
-        }
-        .btn-nav:hover { background-color: #e5e5e5; }
-
-        /* Estilos para las pantallas ocultas */
         .hidden { display: none !important; }
-        #setup-screen button { width: 100%; margin-bottom: 15px; }
-
     </style>
 </head>
 <body>
 
-<div class="container" id="main-container">
+<div class="container">
     <div id="setup-screen">
-        <h1>Bienvenida a tu Estudio</h1>
-        <p>¿Qué te gustaría hacer hoy para practicar?</p>
-        <button class="btn-main" onclick="startStudy()">REPASAR LAS 100 PREGUNTAS</button>
-        <button class="btn-audio" onclick="startQuiz()">TOMAR EXAMEN (10 AL AZAR)</button>
+        <h1>¡Hola, Juanita! 🍌</h1>
+        <p class="welcome-text">Tu camino a la ciudadanía comienza hoy.</p>
+        <button class="btn-check" onclick="startApp()">COMENZAR A ESTUDIAR</button>
     </div>
 
-    <div id="quiz-screen" class="hidden">
-        <div class="progress-bar"><div id="progress-fill"></div></div>
-        <small id="status-text" style="color: #666;">Pregunta 1 de 10</small>
+    <div id="app-screen" class="hidden">
+        <small id="counter" style="color: #999;">Pregunta 1 de 10</small>
         
         <div class="card">
-            <div id="q-en" class="q-en"></div>
-            <div id="q-es" class="q-es"></div>
-            <div id="answer" class="ans-box"></div>
+            <div id="q-en" class="q-en">Cargando...</div>
+            <div id="q-es" class="q-es">Cargando...</div>
+            
+            <div id="dictation-result" class="dictation-box">Presiona el micrófono y di la respuesta...</div>
+            <div id="feedback-msg" class="feedback"></div>
+            <div id="answer-box" class="ans-box"></div>
         </div>
 
         <div class="controls">
-            <button class="btn-audio" onclick="playAudio()">🔊 ESCUCHAR EN INGLÉS</button>
-            <button class="btn-check" id="action-btn" onclick="handleAction()">MOSTRAR RESPUESTA</button>
-            <button class="btn-nav" id="prev-btn" onclick="changeQ(-1)">ANTERIOR</button>
-            <button class="btn-nav" id="next-btn" onclick="changeQ(1)">SIGUIENTE</button>
+            <button class="btn-audio" onclick="playCurrent(true)">🔊 ESCUCHAR PREGUNTA</button>
+            <button class="btn-mic" id="mic-btn" onclick="startDictation()">🎤 DICTAR RESPUESTA</button>
+            <button class="btn-check" id="action-btn" onclick="toggleAnswer()">VER RESPUESTA CORRECTA</button>
+            <button class="btn-nav" onclick="changeQ(-1)">ATRÁS</button>
+            <button class="btn-nav" onclick="changeQ(1)">SIGUIENTE</button>
         </div>
     </div>
 
-    <div id="result-screen" class="hidden">
-        <h2>¡Excelente repaso!</h2>
-        <div class="card" style="border: 2px solid var(--accent); background: #FFFEF0;">
-            <p style="font-size: 1.2rem; color: var(--primary); font-weight: 600;">
-                Has completado la sesión de hoy. Sigue así y pronto estarás lista para tu entrevista.
-            </p>
-        </div>
-        <button class="btn-check" onclick="location.reload()">VOLVER AL INICIO</button>
+    <div id="finish-screen" class="hidden">
+        <h2>¡Lo lograste, Juanita!</h2>
+        <p>Eres una campeona. Has repasado tus preguntas de hoy.</p>
+        <button class="btn-check" onclick="location.reload()">REPETIR SESIÓN</button>
     </div>
 </div>
 
 <script>
-    const allQuestions = [
+    const questions = [
         { en: "What is the supreme law of the land?", es: "¿Cuál es la ley suprema de la nación?", ans: "The Constitution" },
-        { en: "What does the Constitution do?", es: "¿Qué hace la Constitución?", ans: "Sets up the government / Protege los derechos básicos" },
-        { en: "The idea of self-government is in the first three words of the Constitution. What are these words?", es: "¿Cuáles son las primeras tres palabras de la Constitución?", ans: "We the People" },
-        { en: "What is an amendment?", es: "¿Qué es una enmienda?", ans: "A change / An addition (to the Constitution)" },
-        { en: "What do we call the first ten amendments to the Constitution?", es: "Las primeras diez enmiendas se llaman...", ans: "The Bill of Rights" },
-        { en: "What is one right or freedom from the First Amendment?", es: "Un derecho de la Primera Enmienda:", ans: "Speech / Religion / Press" },
+        { en: "What does the Constitution do?", es: "¿Qué hace la Constitución?", ans: "Sets up the government" },
+        { en: "What is an amendment?", es: "¿Qué es una enmienda?", ans: "A change" },
+        { en: "What do we call the first ten amendments to the Constitution?", es: "¿Cómo se llaman las primeras diez enmiendas?", ans: "The Bill of Rights" },
+        { en: "What is one right or freedom from the First Amendment?", es: "Un derecho de la primera enmienda:", ans: "Speech" },
         { en: "How many amendments does the Constitution have?", es: "¿Cuántas enmiendas tiene la Constitución?", ans: "27" },
         { en: "Who is in charge of the executive branch?", es: "¿Quién manda en la rama ejecutiva?", ans: "The President" },
         { en: "Who makes federal laws?", es: "¿Quién hace las leyes federales?", ans: "Congress" },
-        { en: "What are the two parts of the U.S. Congress?", es: "¿Partes del Congreso?", ans: "The Senate and House" }
-        // Se pueden añadir más siguiendo este patrón
+        { en: "What are the two parts of the U.S. Congress?", es: "¿Partes del Congreso?", ans: "The Senate and House" },
+        { en: "What is the economic system in the United States?", es: "¿Sistema económico de USA?", ans: "Market economy" }
     ];
 
-    let currentQuestions = [];
-    let idx = 0;
-    let isQuizMode = false;
-
-    function startStudy() {
-        isQuizMode = false;
-        currentQuestions = [...allQuestions];
-        showScreen('quiz-screen');
-        update();
+    let currentIdx = 0;
+    const recognition = window.SpeechRecognition || window.webkitSpeechRecognition ? new (window.SpeechRecognition || window.webkitSpeechRecognition)() : null;
+    if(recognition) {
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
     }
 
-    function startQuiz() {
-        isQuizMode = true;
-        currentQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
-        showScreen('quiz-screen');
-        update();
-    }
-
-    function showScreen(id) {
+    function startApp() {
         document.getElementById('setup-screen').classList.add('hidden');
-        document.getElementById('quiz-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.add('hidden');
-        document.getElementById(id).classList.remove('hidden');
+        document.getElementById('app-screen').classList.remove('hidden');
+        update();
     }
 
     function update() {
-        const q = currentQuestions[idx];
+        const q = questions[currentIdx];
         document.getElementById('q-en').innerText = q.en;
         document.getElementById('q-es').innerText = q.es;
-        document.getElementById('answer').innerText = "RESPUESTA: " + q.ans;
-        document.getElementById('answer').style.display = 'none';
-        
-        const actionBtn = document.getElementById('action-btn');
-        actionBtn.innerText = "MOSTRAR RESPUESTA";
-        actionBtn.style.backgroundColor = "var(--accent)"; // Reset color
-
-        document.getElementById('status-text').innerText = isQuizMode ? `Pregunta ${idx + 1} de 10 (Examen)` : `Pregunta ${idx + 1} de ${currentQuestions.length} (Estudio)`;
-        document.getElementById('progress-fill').style.width = ((idx + 1) / currentQuestions.length * 100) + "%";
-        
-        // Manejo de botones navegación
-        document.getElementById('prev-btn').style.visibility = idx === 0 ? 'hidden' : 'visible';
+        document.getElementById('answer-box').innerText = "Respuesta oficial: " + q.ans;
+        document.getElementById('answer-box').style.display = 'none';
+        document.getElementById('dictation-result').innerText = "Presiona el micrófono y habla...";
+        document.getElementById('feedback-msg').style.display = 'none';
+        document.getElementById('counter').innerText = `Pregunta ${currentIdx + 1} de ${questions.length}`;
+        window.speechSynthesis.cancel();
     }
 
-    function handleAction() {
-        const ans = document.getElementById('answer');
-        const actionBtn = document.getElementById('action-btn');
+    function playCurrent(isQuestion) {
+        const text = isQuestion ? questions[currentIdx].en : questions[currentIdx].ans;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US';
+        msg.rate = 0.85; // VELOCIDAD AL 85%
+        window.speechSynthesis.speak(msg);
+    }
+
+    function startDictation() {
+        if(!recognition) return alert("Tu navegador no soporta dictado por voz.");
         
-        if (ans.style.display === 'none') {
-            ans.style.display = 'block';
-            if (isQuizMode && idx === currentQuestions.length - 1) {
-                actionBtn.innerText = "TERMINAR Y VER RESULTADO";
-                actionBtn.style.backgroundColor = "var(--success)"; // Cambiar a verde al final
-                actionBtn.style.color = "white";
-            } else {
-                actionBtn.innerText = "SIGUIENTE PREGUNTA";
-            }
+        const btn = document.getElementById('mic-btn');
+        btn.classList.add('listening');
+        btn.innerText = "ESCUCHANDO...";
+        recognition.start();
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('dictation-result').innerText = "Dijiste: " + transcript;
+            checkAnswer(transcript);
+        };
+
+        recognition.onend = () => {
+            btn.classList.remove('listening');
+            btn.innerText = "🎤 DICTAR RESPUESTA";
+        };
+    }
+
+    function checkAnswer(text) {
+        const official = questions[currentIdx].ans.toLowerCase();
+        const userText = text.toLowerCase();
+        const feedback = document.getElementById('feedback-msg');
+        feedback.style.display = 'block';
+
+        // Verificación simple (si la respuesta oficial está contenida en lo que dijo)
+        if (userText.includes(official.split(' ')[0])) {
+            feedback.innerText = "¡EXCELENTE JUANITA! ✅";
+            feedback.style.color = "var(--success)";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FFD700', '#1a2a6c'] });
         } else {
-            if (isQuizMode && idx === currentQuestions.length - 1) {
-                showResults();
-            } else {
-                changeQ(1);
-            }
+            feedback.innerText = "¡Casi! Intenta de nuevo o mira la respuesta ✍️";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    function toggleAnswer() {
+        const box = document.getElementById('answer-box');
+        if(box.style.display === 'none') {
+            box.style.display = 'block';
+            playCurrent(false); // Audio de la respuesta a velocidad lenta
+        } else {
+            box.style.display = 'none';
         }
     }
 
     function changeQ(dir) {
-        idx += dir;
-        if (idx < 0) idx = 0;
-        if (idx >= currentQuestions.length) {
-            idx = currentQuestions.length - 1;
-            if(!isQuizMode) showResults(); // En estudio, también mostramos resultado final
+        currentIdx += dir;
+        if(currentIdx < 0) currentIdx = 0;
+        if(currentIdx >= questions.length) {
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('finish-screen').classList.remove('hidden');
+        } else {
+            update();
         }
-        update();
-    }
-
-    function playAudio() {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(currentQuestions[idx].en);
-        msg.lang = 'en-US';
-        msg.rate = 0.85; 
-        window.speechSynthesis.speak(msg);
-    }
-
-    function showResults() {
-        showScreen('result-screen');
     }
 </script>
+
 </body>
 </html>
